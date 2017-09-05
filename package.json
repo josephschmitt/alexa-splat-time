@@ -1,0 +1,40 @@
+{
+  "name": "alexa-splat-time",
+  "version": "1.0.0",
+  "description": "Ask Alexa for the Splatoon schedule: map rotations and Salmon Run schedule",
+  "author": "Joe Schmitt <me@joe.sh>",
+  "license": "MIT",
+  "main": "dist/bundle.js",
+  "scripts": {
+    "prepare": "rimraf dist/ && rollup --config rollup.config.js",
+    "deploy": "npm run prepare; node-lambda deploy",
+    "start": "npm run prepare; node-lambda run"
+  },
+  "keywords": ["alexa", "splatoon"],
+  "engines": {
+    "node": "6.10"
+  },
+  "dependencies": {
+    "alexa-app": "^4.1.0",
+    "axios": "^0.16.2",
+    "bluebird": "^3.5.0",
+    "dotenv": "^4.0.0",
+    "dynasty": "^0.2.7",
+    "echolocate": "^1.0.2",
+    "moment-timezone": "^0.5.13",
+    "node-geocoder": "^3.20.0",
+    "timezoner": "^0.1.9"
+  },
+  "devDependencies": {
+    "alexa-utterances": "^0.2.1",
+    "babel-core": "^6.26.0",
+    "babel-preset-env": "^1.6.0",
+    "eslint": "^4.6.1",
+    "eslint-config": "^0.3.0",
+    "node-lambda": "^0.11.3",
+    "rimraf": "^2.6.1",
+    "rollup": "^0.49.2",
+    "rollup-plugin-babel": "^3.0.2"
+  },
+  "private": true
+}

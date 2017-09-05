@@ -1,0 +1,9 @@
+.DS_Store
+config/local*
+context.json
+event.json
+
+dist/
+node_modules/
+.lambda/
+.env
