@@ -1,11 +1,17 @@
 module.exports = {
   name: 'SalmonRun',
-  slots: [],
+  slots: [
+    {
+      name: 'startOrEnd',
+      type: 'StartOrEnd',
+      samples: []
+    }
+  ],
   samples: [
-    'when salmon run is{ next}',
-    'when is {the next |}salmon run',
+    'when salmon run is{ next| on| happening}',
+    'when is {the next |}salmon run{ next| on| happening}',
     'when {the next |}salmon run is',
-    'when does salmon run {start|end}',
-    'when salmon run {starts|ends}'
+    'when does salmon run {-|startOrEnd}',
+    'when salmon run {-|startOrEnd}'
   ]
 };

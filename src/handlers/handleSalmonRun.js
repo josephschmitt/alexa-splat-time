@@ -4,6 +4,9 @@ import moment from 'moment-timezone';
 import getSalmonRunSchedule, {DATE_FORMAT} from '../lib/getSalmonRunSchedule.js';
 
 export default async function handleSalmonRun(req, resp) {
+  const startOrEnd = req.slot('startOrEnd');
+  const isReqStart = /start(s)?/.test(startOrEnd);
+  const isReqEnd = /end(s)?/.test(startOrEnd);
   let timeZoneId = 'GMT';
 
   try {
@@ -18,6 +21,11 @@ export default async function handleSalmonRun(req, resp) {
   }
 
   const runs = await getSalmonRunSchedule();
+
+  if (!runs.length) {
+    resp.say('Sorry, no Salmon Run scheduled times found.');
+  }
+
   const {startTime, endTime} = runs[0];
   const formattedStart = formatTime(startTime, timeZoneId);
   const formattedEnd = formatTime(endTime, timeZoneId);
@@ -26,21 +34,35 @@ export default async function handleSalmonRun(req, resp) {
   const isOnNow = !moment(startTime).isAfter(new Date());
 
   if (isOnNow) {
-    respText += `is on now until `;
+    if (isReqStart) {
+      respText += `is on now!`;
+    } else if (!isReqEnd) {
+      respText += `is on now until `;
+    }
   } else {
-    respText += `will start on ${formattedStart} and end on `;
+    if (isReqStart) {
+      respText += `starts on ${formattedStart} `;
+    } else if (!isReqEnd) {
+      respText += `will start on ${formattedStart} and end on `;
+    }
   }
 
-  respText += formattedEnd;
+  if (isReqEnd) {
+    respText += `ends on ${formattedEnd}`;
+  } else if (!isReqStart) {
+    respText += formattedEnd;
+  }
 
-  return resp.say(respText).card({
-    type: 'Simple',
-    title: 'Salmon Run Schedule',
-    content: `${isOnNow ? `Live Now!\n${formattedStart} – ${formattedEnd}` : ''}
+  return resp
+    .say(respText)
+    .card({
+      type: 'Simple',
+      title: 'Salmon Run Schedule',
+      content: `${isOnNow ? `Live Now!\n${formattedStart} – ${formattedEnd}` : ''}
 ---
 Up-coming
 ${formatRuns(runs, timeZoneId, isOnNow)}`,
-  });
+    });
 }
 
 /**
