@@ -1,11 +1,10 @@
-import axios from 'axios';
 import echolocate from 'echolocate';
 import moment from 'moment-timezone';
 
-const SALMON_RUN_URL = 'http://splatooniverse.com/ajax/get-salmon.php';
+import getSalmonRunSchedule, {DATE_FORMAT} from '../lib/getSalmonRunSchedule.js';
 
 export default async function handleSalmonRun(req, resp) {
-  let timeZoneId;
+  let timeZoneId = 'GMT';
 
   try {
     const session = req.getSession();
@@ -18,11 +17,30 @@ export default async function handleSalmonRun(req, resp) {
     // Will default to GMT
   }
 
-  const {data} = await axios.get(SALMON_RUN_URL);
+  const runs = await getSalmonRunSchedule();
+  const {startTime, endTime} = runs[0];
+  const formattedStart = formatTime(startTime, timeZoneId);
+  const formattedEnd = formatTime(endTime, timeZoneId);
 
-  const [nextRun] = data.runs;
-  return resp.say(`Salmon Run is live from ${formatTime(nextRun.start, timeZoneId)} until` +
-      formatTime(nextRun.end, timeZoneId));
+  let respText = 'Salmon Run ';
+  const isOnNow = !moment(startTime).isAfter(new Date());
+
+  if (isOnNow) {
+    respText += `is on now until `;
+  } else {
+    respText += `will start on ${formattedStart} and end on `;
+  }
+
+  respText += formattedEnd;
+
+  return resp.say(respText).card({
+    type: 'Simple',
+    title: 'Salmon Run Schedule',
+    content: `${isOnNow ? `Live Now!\n${formattedStart} – ${formattedEnd}` : ''}
+---
+Up-coming
+${formatRuns(runs, timeZoneId, isOnNow)}`,
+  });
 }
 
 /**
@@ -32,7 +50,25 @@ export default async function handleSalmonRun(req, resp) {
  * @param {String} timeStr
  * @returns {String}
  */
-function formatTime(timeStr, timeZoneId = '') {
-  const date = moment(timeStr, 'HH:mm Do MMMM').tz(timeZoneId);
+function formatTime(timeStr, timeZoneId) {
+  let date = moment(timeStr, DATE_FORMAT);
+  if (timeZoneId) {
+    date = date.tz(timeZoneId);
+  }
+
+  // If within 7 days, no need to give the full date
+  const nextWeek = date.clone().add(6, 'days');
+  if (date.isSameOrBefore(nextWeek)) {
+    return `${date.format('dddd')} at ${date.format('ha')}`;
+  }
+
   return `${date.format('dddd, MMMM Do')} at ${date.format('ha')}`;
+}
+
+function formatRuns(runs, timeZoneId, isOnNow) {
+  return runs.map(({startTime, endTime}) => {
+    return `${formatTime(startTime, timeZoneId)} – ${formatTime(endTime, timeZoneId)}`;
+  })
+  .filter((item, index) => isOnNow ? index > 0 : true)
+  .join('\n');
 }

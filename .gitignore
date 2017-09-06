@@ -2,6 +2,7 @@
 config/local*
 context.json
 event.json
+interaction_model
 
 dist/
 node_modules/

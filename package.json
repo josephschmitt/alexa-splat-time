@@ -6,11 +6,15 @@
   "license": "MIT",
   "main": "dist/bundle.js",
   "scripts": {
+    "gen-interaction": "./scripts/gen-interaction.js",
     "prepare": "rimraf dist/ && rollup --config rollup.config.js",
     "deploy": "npm run prepare; node-lambda deploy",
     "start": "npm run prepare; node-lambda run"
   },
-  "keywords": ["alexa", "splatoon"],
+  "keywords": [
+    "alexa",
+    "splatoon"
+  ],
   "engines": {
     "node": "6.10"
   },
@@ -18,8 +22,8 @@
     "alexa-app": "^4.1.0",
     "axios": "^0.16.2",
     "bluebird": "^3.5.0",
+    "config": "^1.26.2",
     "dotenv": "^4.0.0",
-    "dynasty": "^0.2.7",
     "echolocate": "^1.0.2",
     "moment-timezone": "^0.5.13",
     "node-geocoder": "^3.20.0",
