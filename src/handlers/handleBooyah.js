@@ -1,6 +1,7 @@
 const responses = [
   'Booyah',
-  'Always booyah back'
+  'Always booyah back',
+  'Never squid-bag in anger, only in celebration'
 ];
 
 export default function handleBooyah(req, resp) {
