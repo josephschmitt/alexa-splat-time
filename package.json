@@ -1,6 +1,6 @@
 {
   "name": "alexa-splat-time",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "Ask Alexa for the Splatoon schedule: map rotations and Salmon Run schedule",
   "author": "Joe Schmitt <me@joe.sh>",
   "license": "MIT",

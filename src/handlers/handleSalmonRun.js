@@ -41,14 +41,14 @@ export default async function handleSalmonRun(req, resp) {
     }
   } else {
     if (isReqStart) {
-      respText += `starts on ${formattedStart} `;
+      respText += `starts ${formattedStart} `;
     } else if (!isReqEnd) {
-      respText += `will start on ${formattedStart} and end on `;
+      respText += `will start ${formattedStart}, and end `;
     }
   }
 
   if (isReqEnd) {
-    respText += `ends on ${formattedEnd}`;
+    respText += `ends ${formattedEnd}`;
   } else if (!isReqStart) {
     respText += formattedEnd;
   }
@@ -58,9 +58,7 @@ export default async function handleSalmonRun(req, resp) {
     .card({
       type: 'Simple',
       title: 'Salmon Run Schedule',
-      content: `${isOnNow ? `Live Now!\n${formattedStart} – ${formattedEnd}` : ''}
----
-Up-coming
+      content: `${isOnNow ? `Live Now!\n${formattedStart} – ${formattedEnd}\n---\nUp-coming` : ''}
 ${formatRuns(runs, timeZoneId, isOnNow)}`,
     });
 }
@@ -72,7 +70,7 @@ ${formatRuns(runs, timeZoneId, isOnNow)}`,
  * @param {String} timeStr
  * @returns {String}
  */
-function formatTime(timeStr, timeZoneId) {
+function formatTime(timeStr, timeZoneId, useRelativeTime = true) {
   let date = moment(timeStr, DATE_FORMAT);
   if (timeZoneId) {
     date = date.tz(timeZoneId);
@@ -80,8 +78,8 @@ function formatTime(timeStr, timeZoneId) {
 
   // If within 7 days, no need to give the full date
   const nextWeek = date.clone().add(6, 'days');
-  if (date.isSameOrBefore(nextWeek)) {
-    return `${date.format('dddd')} at ${date.format('ha')}`;
+  if (useRelativeTime && date.isSameOrBefore(nextWeek)) {
+    return date.calendar();
   }
 
   return `${date.format('dddd, MMMM Do')} at ${date.format('ha')}`;
@@ -89,7 +87,7 @@ function formatTime(timeStr, timeZoneId) {
 
 function formatRuns(runs, timeZoneId, isOnNow) {
   return runs.map(({startTime, endTime}) => {
-    return `${formatTime(startTime, timeZoneId)} – ${formatTime(endTime, timeZoneId)}`;
+    return `${formatTime(startTime, timeZoneId, false)} – ${formatTime(endTime, timeZoneId, false)}`;
   })
   .filter((item, index) => isOnNow ? index > 0 : true)
   .join('\n');

@@ -12,6 +12,8 @@ module.exports = {
     'when is {the next |}salmon run{ next| on| happening}',
     'when {the next |}salmon run is',
     'when does salmon run {-|startOrEnd}',
-    'when salmon run {-|startOrEnd}'
+    'when salmon run {-|startOrEnd}',
+    '{when|what}{| the} salmon run {schedule|time} is',
+    '{when|what} is the salmon run {schedule|time}'
   ]
 };
