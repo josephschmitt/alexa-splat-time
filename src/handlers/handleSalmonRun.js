@@ -13,7 +13,8 @@ export default async function handleSalmonRun(req, resp) {
     const session = req.getSession();
     const consentToken = session.details.user.permissions.consentToken;
     const deviceId = req.context.System.device.deviceId;
-    const location = await echolocate(deviceId, {consentToken});
+    const apiEndpoint = req.context.System.apiEndpoint;
+    const location = await echolocate(deviceId, {apiEndpoint, consentToken});
 
     timeZoneId = location.timezone.timeZoneId;
   } catch (e) {

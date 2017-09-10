@@ -1,6 +1,6 @@
 {
   "name": "alexa-splat-time",
-  "version": "1.1.1",
+  "version": "1.1.2",
   "description": "Ask Alexa for the Splatoon schedule: map rotations and Salmon Run schedule",
   "author": "Joe Schmitt <me@joe.sh>",
   "license": "MIT",
@@ -8,8 +8,8 @@
   "scripts": {
     "gen-interaction": "./scripts/gen-interaction.js",
     "prepare": "rimraf dist/ && rollup --config rollup.config.js",
-    "deploy": "npm run prepare; node-lambda deploy",
-    "start": "npm run prepare; node-lambda run"
+    "deploy": "npm run prepare && node-lambda deploy",
+    "start": "npm run prepare && node-lambda run"
   },
   "keywords": [
     "alexa",
@@ -24,7 +24,7 @@
     "bluebird": "^3.5.0",
     "config": "^1.26.2",
     "dotenv": "^4.0.0",
-    "echolocate": "^1.0.2",
+    "echolocate": "^1.1.0",
     "moment-timezone": "^0.5.13",
     "node-geocoder": "^3.20.0",
     "timezoner": "^0.1.9"
