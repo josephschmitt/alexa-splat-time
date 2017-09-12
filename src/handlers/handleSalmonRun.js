@@ -24,7 +24,7 @@ export default async function handleSalmonRun(req, resp) {
   const runs = await getSalmonRunSchedule();
 
   if (!runs.length) {
-    resp.say('Sorry, no Salmon Run scheduled times found.');
+    return resp.say('Sorry, no Salmon Run scheduled times found.');
   }
 
   const {startTime, endTime} = runs[0];
